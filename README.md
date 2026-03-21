@@ -2,11 +2,11 @@
 <img width="1200" height="475" alt="GHBanner" src="https://cdn.phototourl.com/uploads/2026-03-21-78a33fb6-9e38-4523-b06f-82a6ea41d0a5.png" />
 </div>
 
-# ✨ Bible Journal Anak - Petualangan Iman Digital
+# ✝️ Bible Journal Anak - Petualangan Iman Digital
 
 Bible Journal Anak adalah aplikasi pendamping interaktif yang dirancang khusus untuk anak-anak agar dapat bertumbuh dalam iman melalui pembacaan Alkitab harian dan jurnal S.O.A.P yang menyenangkan.
 
-## 🚀 Fitur Utama
+## 🖥️ Fitur Utama
 
 - **📖 Petualangan 365 Hari**: Rencana pembacaan Alkitab yang terstruktur untuk satu tahun penuh.
 - **📝 Jurnal S.O.A.P**: Metode refleksi yang mudah (Scripture, Observation, Application, Prayer) untuk membantu anak merenungkan Firman Tuhan.
