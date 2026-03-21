@@ -889,7 +889,7 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
     { 
       title: "Jurnal Alkitab Anak-anak", 
       desc: "Aplikasi jurnal Alkitab yang menyenangkan dan interaktif untuk anak-anak.", 
-      icon: "/img/logo.png",
+      icon: getAssetUrl("/img/logo.png"),
       isImage: true 
     },
     { 
@@ -929,7 +929,7 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
 
         <div className="flex flex-col items-center text-center mb-8">
           <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary/30 shadow-lg">
-            <img src="/img/profil.png" alt="Developer" className="w-full h-full object-cover" />
+            <img src={getAssetUrl("/img/profil.png")} alt="Developer" className="w-full h-full object-cover" />
           </div>
           <h2 className="font-headline text-2xl font-bold">DENI RAJA99</h2>
           <p className="text-primary text-sm font-bold uppercase tracking-widest">Pendidik di SDN KEJURON</p>
@@ -986,13 +986,13 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
 
         <div className="mt-8 pt-6 border-t border-outline-variant/10 flex justify-center gap-4">
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src="/img/medsos/instagram.jpg" alt="Instagram" className="w-full h-full object-cover" />
+            <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
           </a>
           <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src="/img/medsos/tiktok.jpg" alt="TikTok" className="w-full h-full object-cover" />
+            <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
           </a>
           <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src="/img/medsos/whatsapp.jpg" alt="WhatsApp" className="w-full h-full object-cover" />
+            <img src={getAssetUrl("/img/medsos/whatsapp.jpg")} alt="WhatsApp" className="w-full h-full object-cover" />
           </a>
         </div>
       </motion.div>
@@ -1009,7 +1009,7 @@ function Footer({ user }: { user: UserProfile | null }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img src="/img/logo.png" alt="Logo" className="w-10 h-10 rounded-lg object-cover" />
+              <img src={getAssetUrl("/img/logo.png")} alt="Logo" className="w-10 h-10 rounded-lg object-cover" />
               <span className="font-headline font-bold text-2xl">Bible Journal</span>
             </div>
             <p className="text-on-surface-variant text-sm leading-relaxed">
@@ -1024,7 +1024,7 @@ function Footer({ user }: { user: UserProfile | null }) {
                 onClick={() => setShowPortfolio(true)}
                 className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 hover:border-primary border-2 border-transparent transition-all overflow-hidden shadow-lg group relative"
               >
-                <img src="/img/profil.png" alt="Developer" className="w-full h-full object-cover" />
+                <img src={getAssetUrl("/img/profil.png")} alt="Developer" className="w-full h-full object-cover" />
               </button>
               <div>
                 <p className="font-bold text-sm">DENI RAJA99</p>
@@ -1038,13 +1038,13 @@ function Footer({ user }: { user: UserProfile | null }) {
             <h4 className="font-headline font-bold mb-4 text-primary uppercase tracking-widest text-xs">Hubungi Kami</h4>
             <div className="flex gap-4">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-                <img src="/img/medsos/instagram.jpg" alt="Instagram" className="w-full h-full object-cover" />
+                <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
               </a>
               <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-                <img src="/img/medsos/tiktok.jpg" alt="TikTok" className="w-full h-full object-cover" />
+                <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
               </a>
               <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-                <img src="/img/medsos/whatsapp.jpg" alt="WhatsApp" className="w-full h-full object-cover" />
+                <img src={getAssetUrl("/img/medsos/whatsapp.jpg")} alt="WhatsApp" className="w-full h-full object-cover" />
               </a>
             </div>
           </div>
@@ -1189,12 +1189,12 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div className="absolute inset-0 z-0 opacity-15 group-hover:opacity-25 transition-opacity">
               <div className="w-full h-full relative">
                 <img 
-                  src={`/img/daily/day-${state.currentDay}.jfif`}
+                  src={getAssetUrl(`/img/daily/day-${state.currentDay}.jfif`)}
                   onError={(e) => {
                     const t = e.currentTarget;
                     if (t.src.endsWith('.jfif')) t.src = t.src.replace('.jfif', '.jpeg');
                     else if (t.src.endsWith('.jpeg')) t.src = t.src.replace('.jpeg', '.jpg');
-                    else if (!t.src.includes('logo.png')) t.src = '/img/logo.png';
+                    else if (!t.src.includes('logo.png')) t.src = getAssetUrl('/img/logo.png');
                   }}
                   className="w-full h-full object-cover"
                   alt=""
@@ -1245,7 +1245,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div className="relative w-32 h-32 mb-4 flex items-center justify-center">
               {/* Animated Bible Icon from local gif */}
               <img 
-                src="/img/gif/bible.gif" 
+                src={getAssetUrl("/img/gif/bible.gif")} 
                 alt="Bible"
                 className="w-full h-full object-contain relative z-10"
               />
@@ -1266,7 +1266,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div 
               className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700"
               style={{ 
-                backgroundImage: 'url("/img/kemajuan membaca.jpg")',
+                backgroundImage: `url(${getAssetUrl("/img/kemajuan membaca.jpg")})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
