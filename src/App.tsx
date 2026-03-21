@@ -18,7 +18,7 @@ const getAssetUrl = (path: string) => {
   if (path.startsWith('http') || path.startsWith('data:')) return path;
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${cleanPath}`;
+  return encodeURI(`${base}${cleanPath}`);
 };
 
 function AvatarDisplay({ avatarId, customUrl, className = "w-full h-full", iconSize = "text-3xl" }: { avatarId?: string, customUrl?: string, className?: string, iconSize?: string }) {
