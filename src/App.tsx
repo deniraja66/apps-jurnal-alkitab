@@ -1266,7 +1266,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div 
               className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700"
               style={{ 
-                backgroundImage: `url(${getAssetUrl("/img/kemajuan membaca.jpg")})`,
+                backgroundImage: `url(${getAssetUrl("/img/kemajuan membaca.png")})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
