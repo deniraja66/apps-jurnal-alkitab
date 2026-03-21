@@ -1266,7 +1266,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div 
               className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700"
               style={{ 
-                backgroundImage: `url(${getAssetUrl("/img/kemajuan membaca.png")})`,
+                backgroundImage: `url('${getAssetUrl("/img/kemajuan membaca.png")}')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -1936,7 +1936,7 @@ function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onCl
                 <div 
                   className="absolute inset-0 z-0 opacity-15 group-hover:opacity-25 transition-opacity duration-700"
                   style={{ 
-                    backgroundImage: `url(${getAssetUrl("/img/perjalanan membaca.jpg")})`,
+                    backgroundImage: `url('${getAssetUrl("/img/perjalanan membaca.jpg")}')`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   }}
