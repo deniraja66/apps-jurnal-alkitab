@@ -16,7 +16,7 @@ Bible Journal Anak adalah aplikasi pendamping interaktif yang dirancang khusus u
 
 ## 🤖 Integrasi AI
 
-Aplikasi ini menggunakan teknologi AI canggih dari **Google Gemini** untuk:
+Aplikasi ini menggunakan teknologi AI canggih dari **Google Gemini Pro** untuk:
 1. **Penciptaan Avatar**: Menghasilkan gambar hewan atau karakter unik dari deskripsi teks.
 2. **Ekstraksi Metadata (Upcoming)**: Secara otomatis mengekstrak tema, ayat kunci, dan ringkasan dari catatan jurnal anak untuk membantu pengorganisasian otomatis.
 
