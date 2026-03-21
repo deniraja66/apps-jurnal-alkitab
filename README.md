@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://freeimage.host/i/qksurDQ" />
+<img width="1200" height="475" alt="GHBanner" src="https://cdn.phototourl.com/uploads/2026-03-21-78a33fb6-9e38-4523-b06f-82a6ea41d0a5.png" />
 </div>
 
 # ✨ Bible Journal Anak - Petualangan Iman Digital
