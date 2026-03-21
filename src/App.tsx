@@ -12,6 +12,15 @@ import { INITIAL_BADGES, AVATARS, INITIAL_NOTIFICATIONS, INITIAL_REWARDS } from 
 import { getReadingForDay } from './data/readingPlan';
 import { Avatar } from './types';
 
+// Helper to handle asset URLs with Vite base path
+const getAssetUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${cleanPath}`;
+};
+
 function AvatarDisplay({ avatarId, customUrl, className = "w-full h-full", iconSize = "text-3xl" }: { avatarId?: string, customUrl?: string, className?: string, iconSize?: string }) {
   if (customUrl) {
     return <img src={customUrl} alt="Avatar" className={`${className} object-cover rounded-full`} referrerPolicy="no-referrer" translate="no" />;
@@ -506,9 +515,9 @@ function LoadingScreen() {
           />
           <div className="w-56 h-56 rounded-full glass-card flex items-center justify-center border border-primary/20 p-2 relative overflow-hidden">
             <div className="w-full h-full rounded-full bg-gradient-to-br from-surface-container-high to-surface-container flex flex-col items-center justify-center text-center overflow-hidden">
-              {(import.meta as any).env.VITE_LOGO_URL ? (
+              {getAssetUrl((import.meta as any).env.VITE_LOGO_URL || '/img/logo.png') ? (
                 <img 
-                  src={(import.meta as any).env.VITE_LOGO_URL} 
+                  src={getAssetUrl((import.meta as any).env.VITE_LOGO_URL || '/img/logo.png')} 
                   alt="Logo" 
                   className="w-full h-full object-cover"
                 />
@@ -561,14 +570,14 @@ function OnboardingScreen({ onComplete }: { onComplete: (name: string, avatar: s
           className="mb-8 w-full flex justify-center"
         >
           <img 
-            src="/img/judul.png" 
+            src={getAssetUrl("/img/judul.png")} 
             alt="Selamat Datang di Jurnal Alkitab Anak" 
             className="w-full max-w-[320px] h-auto drop-shadow-[0_0_25px_rgba(255,137,173,0.4)] cursor-default"
             onError={(e) => {
               const target = e.currentTarget;
               if (target.src.includes('judul.png')) {
                 // Try fallback to logo if judul fails
-                target.src = '/img/logo.png';
+                target.src = getAssetUrl('/img/logo.png');
               } else {
                 target.style.display = 'none';
                 // Find or create text fallback
@@ -670,7 +679,7 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
     <nav className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-surface/80 backdrop-blur-md border-b border-outline-variant/10">
       <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('home')}>
         <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/20">
-          <img src="/img/logo.png" alt="Logo" className="w-full h-full object-cover" />
+          <img src={getAssetUrl("/img/logo.png")} alt="Logo" className="w-full h-full object-cover" />
         </div>
         <span className="font-headline font-bold text-xl tracking-tight">Bible Journal</span>
       </div>
@@ -691,7 +700,7 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div className="w-8 h-8 flex items-center justify-center">
               <DynamicIcon 
                 hex="&#xe7f4;" 
-                iconUrl={(import.meta as any).env.VITE_NOTIFICATION_ICON_URL} 
+                iconUrl={getAssetUrl((import.meta as any).env.VITE_NOTIFICATION_ICON_URL || '/img/notif.png')} 
                 sizeClass="text-xl"
               />
             </div>
@@ -754,7 +763,7 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div className="w-8 h-8 flex items-center justify-center">
               <DynamicIcon 
                 hex="&#xea23;" 
-                iconUrl={(import.meta as any).env.VITE_REWARD_ICON_URL} 
+                iconUrl={getAssetUrl((import.meta as any).env.VITE_REWARD_ICON_URL || '/img/reward.png')} 
                 sizeClass="text-xl text-tertiary"
                 className="material-symbols-outlined notranslate fill-icon"
               />
@@ -1475,12 +1484,12 @@ function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogou
                     {!isLocked && (
                       <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
                         <img 
-                          src={`/img/daily/day-${day}.jfif`}
+                          src={getAssetUrl(`/img/daily/day-${day}.jfif`)}
                           onError={(e) => {
                             const t = e.currentTarget;
                             if (t.src.endsWith('.jfif')) t.src = t.src.replace('.jfif', '.jpeg');
                             else if (t.src.endsWith('.jpeg')) t.src = t.src.replace('.jpeg', '.jpg');
-                            else if (!t.src.includes('logo.png')) t.src = '/img/logo.png';
+                            else if (!t.src.includes('logo.png')) t.src = getAssetUrl('/img/logo.png');
                           }}
                           className="w-full h-full object-cover"
                           alt=""
@@ -1532,12 +1541,12 @@ function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogo
         <header className="mb-10 text-center relative p-8 rounded-3xl overflow-hidden">
           <div className="absolute inset-0 z-0 opacity-20">
             <img 
-              src={`/img/daily/day-${state.currentDay}.jfif`}
+              src={getAssetUrl(`/img/daily/day-${state.currentDay}.jfif`)}
               onError={(e) => {
                 const t = e.currentTarget;
                 if (t.src.endsWith('.jfif')) t.src = t.src.replace('.jfif', '.jpeg');
                 else if (t.src.endsWith('.jpeg')) t.src = t.src.replace('.jpeg', '.jpg');
-                else if (!t.src.includes('logo.png')) t.src = '/img/logo.png';
+                else if (!t.src.includes('logo.png')) t.src = getAssetUrl('/img/logo.png');
               }}
               className="w-full h-full object-cover"
               alt=""
@@ -1587,14 +1596,14 @@ function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogo
           <div className="relative h-56 rounded-2xl overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-outline-variant/10">
             <img 
               className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" 
-              src={`/img/daily/day-${state.currentDay}.jfif`} 
+              src={getAssetUrl(`/img/daily/day-${state.currentDay}.jfif`)} 
               alt="Reading Visual" 
               referrerPolicy="no-referrer" 
               onError={(e) => {
                 const t = e.currentTarget;
                 if (t.src.endsWith('.jfif')) t.src = t.src.replace('.jfif', '.jpeg');
                 else if (t.src.endsWith('.jpeg')) t.src = t.src.replace('.jpeg', '.jpg');
-                else if (!t.src.includes('logo.png')) t.src = '/img/logo.png';
+                else if (!t.src.includes('logo.png')) t.src = getAssetUrl('/img/logo.png');
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-end p-6">
@@ -1927,7 +1936,7 @@ function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onCl
                 <div 
                   className="absolute inset-0 z-0 opacity-15 group-hover:opacity-25 transition-opacity duration-700"
                   style={{ 
-                    backgroundImage: 'url("/img/perjalanan membaca.jpg")',
+                    backgroundImage: `url(${getAssetUrl("/img/perjalanan membaca.jpg")})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   }}
