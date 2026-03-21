@@ -1,12 +1,12 @@
 import { Badge, Notification, Reward } from './types';
 
 export const INITIAL_BADGES: Badge[] = [
-  { id: '1', name: 'PEMULA', icon: '🌱', url: '/img/lencana/pemula.png', unlocked: true, color: 'tertiary' },
-  { id: '2', name: 'SETIA', icon: '🛡️', url: '/img/lencana/setia.png', unlocked: true, color: 'primary' },
-  { id: '3', name: 'DAMAI', icon: '🕊️', url: '/img/lencana/damai.png', unlocked: true, color: 'secondary' },
-  { id: '4', name: 'BINTANG 7 HARI', icon: '⭐', url: '/img/lencana/bintang 7 hari.png', unlocked: true, color: 'tertiary' },
-  { id: '5', name: 'PRAJURIT DOA', icon: '✨', url: '/img/lencana/prajurit doa.png', unlocked: true, color: 'secondary' },
-  { id: '6', name: 'PENYELAM DALAM', icon: '🚀', url: '/img/lencana/penyelam dalam.png', unlocked: true, color: 'primary' },
+  { id: '1', name: 'PEMULA', icon: '🌱', url: 'img/lencana/pemula.png', unlocked: true, color: 'tertiary' },
+  { id: '2', name: 'SETIA', icon: '🛡️', url: 'img/lencana/setia.png', unlocked: true, color: 'primary' },
+  { id: '3', name: 'DAMAI', icon: '🕊️', url: 'img/lencana/damai.png', unlocked: true, color: 'secondary' },
+  { id: '4', name: 'BINTANG 7 HARI', icon: '⭐', url: 'img/lencana/bintang 7 hari.png', unlocked: true, color: 'tertiary' },
+  { id: '5', name: 'PRAJURIT DOA', icon: '✨', url: 'img/lencana/prajurit doa.png', unlocked: true, color: 'secondary' },
+  { id: '6', name: 'PENYELAM DALAM', icon: '🚀', url: 'img/lencana/penyelam dalam.png', unlocked: true, color: 'primary' },
   { id: '7', name: 'Lion', icon: '🦁', unlocked: false, color: 'surface-variant' },
   { id: '8', name: 'Warrior', icon: '⚔️', unlocked: false, color: 'surface-variant' },
   { id: '9', name: 'King', icon: '👑', unlocked: false, color: 'surface-variant' },
@@ -60,24 +60,24 @@ export const INITIAL_REWARDS: Reward[] = [
 
 export const AVATARS = [
   // Karakter Laki-laki (Dulu adv1-adv4)
-  { id: 'adv1', name: 'Laki-laki 1', category: 'Laki-laki', url: '/img/karakter/laki-1.jpg' },
-  { id: 'adv2', name: 'Laki-laki 2', category: 'Laki-laki', url: '/img/karakter/laki-2.jpg' },
-  { id: 'adv3', name: 'Laki-laki 3', category: 'Laki-laki', url: '/img/karakter/laki-3.jpg' },
-  { id: 'adv4', name: 'Laki-laki 4', category: 'Laki-laki', url: '/img/karakter/laki-4.jpg' },
+  { id: 'adv1', name: 'Laki-laki 1', category: 'Laki-laki', url: 'img/karakter/laki-1.jpg' },
+  { id: 'adv2', name: 'Laki-laki 2', category: 'Laki-laki', url: 'img/karakter/laki-2.jpg' },
+  { id: 'adv3', name: 'Laki-laki 3', category: 'Laki-laki', url: 'img/karakter/laki-3.jpg' },
+  { id: 'adv4', name: 'Laki-laki 4', category: 'Laki-laki', url: 'img/karakter/laki-4.jpg' },
 
   // Karakter Perempuan (Dulu adv5-adv8)
-  { id: 'adv5', name: 'Perempuan 1', category: 'Perempuan', url: '/img/karakter/cewe-1.jpg' },
-  { id: 'adv6', name: 'Perempuan 2', category: 'Perempuan', url: '/img/karakter/cewe-2.jpg' },
-  { id: 'adv7', name: 'Perempuan 3', category: 'Perempuan', url: '/img/karakter/cewe-3.jpg' },
-  { id: 'adv8', name: 'Perempuan 4', category: 'Perempuan', url: '/img/karakter/cewe-4.jpg' },
+  { id: 'adv5', name: 'Perempuan 1', category: 'Perempuan', url: 'img/karakter/cewe-1.jpg' },
+  { id: 'adv6', name: 'Perempuan 2', category: 'Perempuan', url: 'img/karakter/cewe-2.jpg' },
+  { id: 'adv7', name: 'Perempuan 3', category: 'Perempuan', url: 'img/karakter/cewe-3.jpg' },
+  { id: 'adv8', name: 'Perempuan 4', category: 'Perempuan', url: 'img/karakter/cewe-4.jpg' },
  
   // Hewan
-  { id: 'h_anjing', name: 'Anjing', category: 'Hewan', url: '/img/hewan/anjing.jpg' },
-  { id: 'h_ayam', name: 'Ayam', category: 'Hewan', url: '/img/hewan/ayam.jpg' },
-  { id: 'h_domba', name: 'Domba', category: 'Hewan', url: '/img/hewan/domba.jpg' },
-  { id: 'h_ikan', name: 'Ikan', category: 'Hewan', url: '/img/hewan/ikan.jpg' },
-  { id: 'h_kelinci', name: 'Kelinci', category: 'Hewan', url: '/img/hewan/kelinci.jpg' },
-  { id: 'h_kucing', name: 'Kucing', category: 'Hewan', url: '/img/hewan/kucing.jpg' },
-  { id: 'h_merpati', name: 'Merpati', category: 'Hewan', url: '/img/hewan/merpati.jpg' },
-  { id: 'h_singa', name: 'Singa', category: 'Hewan', url: '/img/hewan/singa.jpg' },
+  { id: 'h_anjing', name: 'Anjing', category: 'Hewan', url: 'img/hewan/anjing.jpg' },
+  { id: 'h_ayam', name: 'Ayam', category: 'Hewan', url: 'img/hewan/ayam.jpg' },
+  { id: 'h_domba', name: 'Domba', category: 'Hewan', url: 'img/hewan/domba.jpg' },
+  { id: 'h_ikan', name: 'Ikan', category: 'Hewan', url: 'img/hewan/ikan.jpg' },
+  { id: 'h_kelinci', name: 'Kelinci', category: 'Hewan', url: 'img/hewan/kelinci.jpg' },
+  { id: 'h_kucing', name: 'Kucing', category: 'Hewan', url: 'img/hewan/kucing.jpg' },
+  { id: 'h_merpati', name: 'Merpati', category: 'Hewan', url: 'img/hewan/merpati.jpg' },
+  { id: 'h_singa', name: 'Singa', category: 'Hewan', url: 'img/hewan/singa.jpg' },
 ];
