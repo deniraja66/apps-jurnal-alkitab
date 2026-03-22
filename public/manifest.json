@@ -1,0 +1,17 @@
+{
+  "name": "Jurnal Alkitab Anak",
+  "short_name": "Jurnal Anak",
+  "description": "Membantu anak-anak bertumbuh dalam iman melalui pembacaan Alkitab harian dan jurnal S.O.A.P yang interaktif.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0F0A19",
+  "theme_color": "#FF8AA1",
+  "icons": [
+    {
+      "src": "./img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
