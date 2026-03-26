@@ -908,26 +908,6 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
 }
 
 function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
-  const projects = [
-    { 
-      title: "Jurnal Alkitab Anak-anak", 
-      desc: "Aplikasi jurnal Alkitab yang menyenangkan dan interaktif untuk anak-anak.", 
-      icon: getAssetUrl("/img/logo.png"),
-      isImage: true 
-    },
-    { 
-      title: "Penjelajah Alkitab", 
-      desc: "Permainan edukasi tentang Alkitab.", 
-      icon: "&#xeb9b;",
-      url: "https://remaja-aelor.vercel.app/" 
-    },
-    { 
-      title: "Prajurit Doa", 
-      desc: "Aplikasi komunitas untuk berbagi permintaan doa.", 
-      icon: "&#xea70;" 
-    }
-  ];
-
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
@@ -940,17 +920,17 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="glass-card w-full max-w-md rounded-2xl p-8 border border-primary/30 shadow-2xl relative"
+        className="glass-card w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl p-8 border border-primary/30 shadow-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface"
+          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface bg-surface-container-high/50 rounded-full w-8 h-8 flex items-center justify-center"
         >
-          <span className="material-symbols-outlined notranslate" translate="no">&#xe5cd;</span>
+          <span className="material-symbols-outlined notranslate text-lg" translate="no">&#xe5cd;</span>
         </button>
 
-        <div className="flex flex-col items-center text-center mb-8">
+        <div className="flex flex-col items-center text-center mb-8 mt-2">
           <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary/30 shadow-lg">
             <img src={getAssetUrl("/img/profil.png")} alt="Developer" className="w-full h-full object-cover" />
           </div>
@@ -973,45 +953,84 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
           <section>
             <h3 className="text-xs font-bold text-outline uppercase tracking-widest mb-3">Proyek Unggulan</h3>
             <div className="space-y-3">
-              {projects.map((project, i) => {
-                const Content = (
-                  <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors group">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
-                      {project.isImage ? (
-                        <img src={project.icon} alt={project.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no" dangerouslySetInnerHTML={{ __html: project.icon }}></span>
-                      )}
-                    </div>
-                    <div className="text-left flex-grow">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold group-hover:text-primary transition-colors">{project.title}</h4>
-                        {project.url && <span className="material-symbols-outlined notranslate text-xs text-primary animate-pulse" translate="no">&#xe89e;</span>}
-                      </div>
-                      <p className="text-[10px] text-on-surface-variant leading-tight">{project.desc}</p>
-                    </div>
+              {/* Proyek 1: Jurnal Alkitab Anak */}
+              <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src={getAssetUrl("/img/logo.png")} alt="Jurnal Alkitab Anak-anak" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-left flex-grow">
+                  <h4 className="text-sm font-bold transition-colors">Jurnal Alkitab Anak-anak</h4>
+                  <p className="text-[10px] text-on-surface-variant leading-tight">Aplikasi jurnal Alkitab yang menyenangkan dan interaktif untuk anak-anak.</p>
+                </div>
+              </div>
+
+              {/* Proyek 2: Penjelajah Alkitab */}
+              <div className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no" dangerouslySetInnerHTML={{ __html: '&#xeb9b;' }}></span>
                   </div>
-                );
+                  <div className="text-left flex-grow">
+                    <h4 className="text-sm font-bold transition-colors">Penjelajah Alkitab</h4>
+                    <p className="text-[10px] text-on-surface-variant leading-tight">Permainan edukasi tentang Alkitab.</p>
+                  </div>
+                </div>
+                <div className="space-y-2 pl-[3.25rem]">
+                  <a href="https://deniraja53.github.io/storytelling-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
+                    <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 group-hover:bg-secondary/40 transition-colors">
+                      <span className="material-symbols-outlined text-[14px] text-secondary" translate="no">&#xe02f;</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">Menyusun Cerita</span>
+                  </a>
+                  <a href="https://deniraja53.github.io/pitstop-deni-tts/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
+                    <div className="w-6 h-6 rounded-full bg-tertiary/20 flex items-center justify-center shrink-0 group-hover:bg-tertiary/40 transition-colors">
+                      <span className="material-symbols-outlined text-[14px] text-tertiary" translate="no">&#xe86f;</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">TTS</span>
+                  </a>
+                  <a href="https://deniraja53.github.io/code-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/40 transition-colors">
+                      <span className="material-symbols-outlined text-[14px] text-primary" translate="no">&#xe869;</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">Bible Code</span>
+                  </a>
+                </div>
+              </div>
 
-                if (project.url) {
-                  return (
-                    <a key={i} href={project.url} target="_blank" rel="noopener noreferrer" className="block focus:outline-none">
-                      {Content}
-                    </a>
-                  );
-                }
-
-                return <div key={i}>{Content}</div>;
-              })}
+              {/* Proyek 3: Prajurit Doa */}
+              <div className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no" dangerouslySetInnerHTML={{ __html: '&#xea70;' }}></span>
+                  </div>
+                  <div className="text-left flex-grow">
+                    <h4 className="text-sm font-bold transition-colors">Prajurit Doa</h4>
+                    <p className="text-[10px] text-on-surface-variant leading-tight">Aplikasi komunitas doa.</p>
+                  </div>
+                </div>
+                <div className="text-[11px] text-on-surface-variant leading-relaxed border-l-2 border-primary/20 ml-5 pl-4 py-1 italic">
+                  <p className="font-bold text-primary mb-1 not-italic">DOA BAPA KAMI (Matius 6:9-13)</p>
+                  <p>Bapa kami yang di surga,<br/>
+                  Dikuduskanlah nama-Mu.<br/>
+                  Datanglah kerajaan-Mu.<br/>
+                  Jadilah kehendak-Mu di bumi seperti di surga.<br/>
+                  Berikanlah kami pada hari ini makanan kami yang secukupnya.<br/>
+                  Dan ampunilah kami akan kesalahan kami,<br/>
+                  seperti kami juga mengampuni orang yang bersalah kepada kami.<br/>
+                  Dan janganlah membawa kami ke dalam pencobaan,<br/>
+                  tetapi lepaskanlah kami dari pada yang jahat.</p>
+                  <p className="mt-1">(Karena Engkaulah yang empunya Kerajaan dan kuasa dan kemuliaan sampai selama-lamanya. Amin)</p>
+                </div>
+              </div>
             </div>
           </section>
         </div>
 
         <div className="mt-8 pt-6 border-t border-outline-variant/10 flex justify-center gap-4">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+          <a href="https://instagram.com/deni_raja99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
             <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
           </a>
-          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+          <a href="https://tiktok.com/@denoxz99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
             <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
           </a>
           <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
@@ -1060,10 +1079,10 @@ function Footer({ user }: { user: UserProfile | null }) {
           <div className="col-span-1">
             <h4 className="font-headline font-bold mb-4 text-primary uppercase tracking-widest text-xs">Hubungi Kami</h4>
             <div className="flex gap-4">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+              <a href="https://instagram.com/deni_raja99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
                 <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
               </a>
-              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+              <a href="https://tiktok.com/@denoxz99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
                 <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
               </a>
               <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
