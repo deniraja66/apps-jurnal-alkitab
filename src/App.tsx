@@ -506,10 +506,10 @@ function LoadingScreen() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 flex items-center justify-center bg-background z-50"
+      className="fixed inset-0 flex items-center justify-center bg-background z-50 overflow-hidden"
     >
-      <div className="star-field absolute inset-0 opacity-30">
-        {[...Array(20)].map((_, i) => (
+      <div className="star-field absolute inset-0 opacity-20 pointer-events-none">
+        {[...Array(15)].map((_, i) => (
           <div
             key={i}
             className="star absolute bg-white rounded-full"
@@ -518,26 +518,31 @@ function LoadingScreen() {
               height: Math.random() * 2 + 1 + 'px',
               top: Math.random() * 100 + '%',
               left: Math.random() * 100 + '%',
-              opacity: Math.random()
+              opacity: Math.random(),
+              // Remove JS animation and use pure CSS or static for stars if possible
             }}
           />
         ))}
       </div>
       <div className="relative flex flex-col items-center">
-        <div className="central-glow absolute w-96 h-96 bg-primary/10 blur-3xl rounded-full" />
+        {/* Replaced expensive blur-3xl filter with a highly optimized static CSS radial gradient */}
+        <div className="absolute w-[350px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255, 137, 173, 0.15) 0%, transparent 70%)', transform: 'translateZ(0)' }} />
+        
         <div className="relative z-10 flex flex-col items-center">
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-4 border-2 border-transparent border-t-primary border-r-secondary rounded-full"
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: "center center" }}
+            className="absolute -inset-4 border-2 border-transparent border-t-primary border-r-secondary rounded-full transform-gpu will-change-transform"
           />
-          <div className="w-56 h-56 rounded-full glass-card flex items-center justify-center border border-primary/20 p-2 relative overflow-hidden">
-            <div className="w-full h-full rounded-full bg-gradient-to-br from-surface-container-high to-surface-container flex flex-col items-center justify-center text-center overflow-hidden">
+          {/* Removed glass-card which costs GPU for backdrop-blur, replaced with solid styling */}
+          <div className="w-56 h-56 rounded-full flex items-center justify-center border border-primary/20 p-2 relative overflow-hidden bg-surface-container shadow-xl">
+            <div className="w-full h-full rounded-full bg-gradient-to-br from-surface-container-high to-surface-container flex flex-col items-center justify-center text-center overflow-hidden transform-gpu">
               {getAssetUrl((import.meta as any).env.VITE_LOGO_URL || '/img/logo.png') ? (
                 <img 
                   src={getAssetUrl((import.meta as any).env.VITE_LOGO_URL || '/img/logo.png')} 
                   alt="Logo" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transform-gpu"
                 />
               ) : (
                 <>
@@ -551,9 +556,9 @@ function LoadingScreen() {
         <div className="mt-12 text-center space-y-4 z-10">
           <p className="font-headline text-lg font-semibold text-on-background opacity-90">Memuat Jurnal Firman Tuhan</p>
           <div className="flex gap-2 justify-center">
-            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0 }} className="w-2 h-2 rounded-full bg-primary" />
-            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }} className="w-2 h-2 rounded-full bg-primary" />
-            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }} className="w-2 h-2 rounded-full bg-primary" />
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0 }} className="w-2 h-2 rounded-full bg-primary transform-gpu will-change-opacity" />
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }} className="w-2 h-2 rounded-full bg-primary transform-gpu will-change-opacity" />
+            <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }} className="w-2 h-2 rounded-full bg-primary transform-gpu will-change-opacity" />
           </div>
         </div>
       </div>
