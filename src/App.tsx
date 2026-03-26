@@ -707,9 +707,9 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
         <span className="font-headline font-bold text-xl tracking-tight">Bible Journal</span>
       </div>
       <div className="hidden md:flex items-center gap-8">
-        <button onClick={() => navigate('home')} className={`font-medium transition-colors ${state.screen === 'home' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Home</button>
-        <button onClick={() => navigate('reading-plan')} className={`font-medium transition-colors ${state.screen === 'reading-plan' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Progress</button>
-        <button onClick={() => navigate('profile')} className={`font-medium transition-colors ${state.screen === 'profile' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Profile</button>
+        <button onClick={() => navigate('home')} className={`font-medium transition-colors ${state.screen === 'home' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Beranda</button>
+        <button onClick={() => navigate('reading-plan')} className={`font-medium transition-colors ${state.screen === 'reading-plan' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Progres</button>
+        <button onClick={() => navigate('profile')} className={`font-medium transition-colors ${state.screen === 'profile' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>Profil</button>
       </div>
       <div className="flex items-center gap-4">
         <div className="relative">
@@ -1948,7 +1948,7 @@ function JournalEntryScreen({ state, onSave, onBack }: { state: AppState; onSave
           </button>
           <p className="font-label text-sm text-on-surface-variant flex items-center gap-2">
             <span className="material-symbols-outlined notranslate text-sm" translate="no">&#xe94f;</span>
-            You will earn +50 Star Points!
+            Kamu akan mendapatkan +50 Poin Bintang!
           </p>
         </div>
       </main>
@@ -1974,7 +1974,7 @@ function RewardScreen({ state, onContinue }: { state: AppState; onContinue: () =
                 >
                   &#xeb9b;
                 </motion.span>
-                <span className="mt-2 font-headline font-extrabold text-sm md:text-base text-tertiary tracking-widest uppercase">Genesis Explorer</span>
+                <span className="mt-2 font-headline font-extrabold text-sm md:text-base text-tertiary tracking-widest uppercase">Penjelajah Kejadian</span>
               </div>
             </div>
           </div>
@@ -2088,7 +2088,7 @@ function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onCl
                   <span className="material-symbols-outlined notranslate text-sm fill-icon" translate="no">&#xea3f;</span>
                   {state.xp} XP TERKUMPUL
                 </div>
-                <p className="text-on-surface-variant mb-8">Member since 2026</p>
+                <p className="text-on-surface-variant mb-8">Anggota sejak 2026</p>
                 <div className="flex flex-col gap-3">
                   <button className="w-full h-14 cosmic-gradient text-on-primary-container font-bold rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
                     <span className="material-symbols-outlined notranslate" translate="no">&#xe86a;</span>
