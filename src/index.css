@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 @import "tailwindcss";
-@source "./";
 
-@theme {
+:root {
   --font-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Lexend", ui-sans-serif, system-ui, sans-serif;
   --font-label: "Lexend", ui-sans-serif, system-ui, sans-serif;
@@ -27,7 +26,9 @@
 
 @layer base {
   body {
-    @apply bg-background text-on-surface font-body;
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    font-family: var(--font-body);
     background-image: radial-gradient(circle at 20% 30%, #311753 0%, transparent 40%),
                       radial-gradient(circle at 80% 70%, #1c0736 0%, transparent 40%);
     background-attachment: fixed;
