@@ -126,11 +126,11 @@ export default function App() {
           ...defaults,
           ...parsed, 
           screen: 'loading',
-          // Merge latest badge data (like URLs) into saved progress
-          badges: (parsed.badges || INITIAL_BADGES).map((b: Badge) => {
-            const initial = INITIAL_BADGES.find(ib => ib.id === b.id);
-            return initial ? { ...b, ...initial, unlocked: b.unlocked } : b;
-          }),
+          // Compute unlocked status based on currentDay
+          badges: INITIAL_BADGES.map((ib: Badge) => ({
+            ...ib,
+            unlocked: (parsed.currentDay || defaults.currentDay) >= ib.requiredDays
+          })),
           notifications: parsed.notifications || INITIAL_NOTIFICATIONS,
           rewards: parsed.rewards || INITIAL_REWARDS,
           entries: parsed.entries || [],
@@ -410,6 +410,24 @@ export default function App() {
       return () => clearInterval(interval);
     }
   }, [state.user?.startDate, state.currentDay]);
+
+  // Keep badges synced with currentDay
+  useEffect(() => {
+    setState(prev => {
+      const needsUpdate = INITIAL_BADGES.some(ib => 
+        (prev.currentDay >= ib.requiredDays) !== prev.badges.find(b => b.id === ib.id)?.unlocked
+      );
+      if (!needsUpdate) return prev;
+      
+      return {
+        ...prev,
+        badges: INITIAL_BADGES.map(ib => ({
+          ...ib,
+          unlocked: prev.currentDay >= ib.requiredDays
+        }))
+      };
+    });
+  }, [state.currentDay]);
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
@@ -717,9 +735,9 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-80 glass-card rounded-2xl shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
+                className="fixed top-20 left-4 right-4 sm:absolute sm:top-auto sm:left-auto sm:-right-4 sm:mt-3 sm:w-80 bg-[#130726] rounded-2xl shadow-[0_10px_50px_rgba(0,0,0,0.9)] border border-[#ff89ad]/20 overflow-hidden z-50 origin-top sm:origin-top-right"
               >
-                <div className="p-4 border-b border-outline-variant/10 bg-surface-container-low flex items-center justify-between">
+                <div className="p-4 border-b border-[#ff89ad]/10 bg-[#2a124a]/50 flex items-center justify-between">
                   <h4 className="font-headline font-bold">Pemberitahuan</h4>
                   <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{unreadCount} Baru</span>
                 </div>
@@ -781,9 +799,9 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-80 glass-card rounded-2xl shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
+                className="fixed top-20 left-4 right-4 sm:absolute sm:top-auto sm:left-auto sm:-right-4 sm:mt-3 sm:w-80 bg-[#130726] rounded-2xl shadow-[0_10px_50px_rgba(0,0,0,0.9)] border border-tertiary/30 overflow-hidden z-50 origin-top sm:origin-top-right"
               >
-                <div className="p-4 border-b border-outline-variant/10 bg-surface-container-low flex items-center justify-between">
+                <div className="p-4 border-b border-tertiary/10 bg-[#2a124a]/50 flex items-center justify-between">
                   <h4 className="font-headline font-bold">Klaim Hadiah</h4>
                   <span className="text-[10px] font-bold text-tertiary uppercase tracking-wider">{unclaimedCount} Tersedia</span>
                 </div>
@@ -1309,7 +1327,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
           {/* Badge Card */}
           <div className="md:col-span-5 bg-surface-container-low rounded-3xl p-8 border border-outline-variant/10 shadow-xl overflow-hidden relative">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="font-headline text-2xl font-bold text-on-surface">Lencana Koleksi</h3>
+              <h3 className="font-headline text-2xl font-bold text-on-surface">Lencana Koleksi <span className="text-sm font-normal text-primary">(Hari {state.currentDay})</span></h3>
               <button 
                 onClick={() => navigate('profile')} 
                 className="bg-[#ff89ad] text-[#543782] px-5 py-2 rounded-xl text-xs font-black uppercase tracking-wider hover:scale-105 active:scale-95 transition-all shadow-[0_4px_12px_rgba(255,137,173,0.3)]"
@@ -1322,16 +1340,16 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
               {(state.badges || []).slice(0, 6).map((badge) => (
                 <div 
                   key={badge.id} 
-                  className={`aspect-square rounded-2xl bg-[#2a124a]/40 flex flex-col items-center justify-center p-3 border border-[#513f6b]/30 transition-all duration-500 hover:bg-[#311753]/60 hover:border-primary/30 group ${badge.unlocked ? 'opacity-100' : 'opacity-30 grayscale'}`}
+                  className={`aspect-square rounded-2xl bg-[#2a124a]/40 flex flex-col items-center justify-center p-3 border transition-all duration-500 group ${badge.unlocked ? 'opacity-100 shadow-[0_0_15px_rgba(255,137,173,0.3)] border-primary/40 bg-[#311753]/60' : 'opacity-40 grayscale border-[#513f6b]/30'}`}
                 >
-                  <div className="w-full h-2/3 mb-2 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                  <div className={`w-full h-2/3 mb-2 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 ${badge.unlocked ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : ''}`}>
                     {badge.url ? (
-                      <img src={badge.url} alt={badge.name} className="w-full h-full object-contain drop-shadow-lg" />
+                      <img src={badge.url} alt={badge.name} className="w-full h-full object-contain" />
                     ) : (
                       <span className="text-3xl">{badge.icon}</span>
                     )}
                   </div>
-                  <span className="text-[9px] font-black text-center text-on-surface-variant group-hover:text-primary transition-colors tracking-widest uppercase truncate w-full">
+                  <span className={`text-[9px] font-black text-center transition-colors tracking-widest uppercase truncate w-full ${badge.unlocked ? 'text-primary drop-shadow-[0_0_8px_rgba(255,137,173,0.8)]' : 'text-on-surface-variant'}`}>
                     {badge.unlocked ? badge.name : 'TERKUNCI'}
                   </span>
                 </div>
@@ -1981,39 +1999,34 @@ function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onCl
             <section>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-headline text-xl font-bold px-2">Lencana Keren</h2>
-                <span className="text-secondary font-bold">{state.badges?.filter(b => b.unlocked).length || 0} Koleksi</span>
+                <span className="text-secondary font-bold">{state.badges?.filter(b => b.unlocked).length || 0} / 6 Terbuka</span>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {state.badges?.filter(b => b.unlocked).slice(-4).reverse().map((badge, index) => (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {(state.badges || []).map((badge, index) => (
                   <motion.div 
                     key={badge.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      y: -5,
-                      boxShadow: "0 10px 25px -5px rgba(var(--primary-rgb), 0.2)"
-                    }}
-                    className="glass-card rounded-lg p-4 flex flex-col items-center text-center transition-colors border border-outline-variant/10 group cursor-pointer"
+                    whileHover={badge.unlocked ? { scale: 1.05, y: -5, boxShadow: "0 10px 25px -5px rgba(var(--primary-rgb), 0.2)" } : {}}
+                    className={`glass-card rounded-xl p-4 flex flex-col items-center text-center transition-all border group ${badge.unlocked ? 'border-primary/50 shadow-[0_0_15px_rgba(255,137,173,0.2)] cursor-pointer' : 'border-outline-variant/10 opacity-60 grayscale'}`}
                   >
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 bg-${badge.color}/20 group-hover:bg-${badge.color}/30 transition-colors relative overflow-hidden`}>
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-colors relative overflow-hidden ${badge.unlocked ? `bg-${badge.color}/20 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:bg-${badge.color}/30` : 'bg-surface-container-high'}`}>
                       <motion.div
-                        animate={{ rotate: [0, 5, -5, 0] }}
+                        animate={badge.unlocked ? { rotate: [0, 5, -5, 0] } : {}}
                         transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                        className="w-full h-full flex items-center justify-center p-2"
+                        className={`w-full h-full flex items-center justify-center p-2 ${badge.unlocked ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]' : ''}`}
                       >
                         {badge.url ? (
-                          <img src={badge.url} alt={badge.name} className="w-full h-full object-contain drop-shadow-lg" />
+                          <img src={badge.url} alt={badge.name} className="w-full h-full object-contain" />
                         ) : badge.icon.length > 2 ? (
-                          <span className="material-symbols-outlined notranslate text-3xl fill-icon group-hover:scale-110 transition-transform" translate="no" dangerouslySetInnerHTML={{ __html: badge.icon }}></span>
+                          <span className="material-symbols-outlined notranslate text-3xl fill-icon" translate="no" dangerouslySetInnerHTML={{ __html: badge.icon }}></span>
                         ) : (
-                          <span className="text-3xl group-hover:scale-110 transition-transform">{badge.icon}</span>
+                          <span className="text-3xl">{badge.icon}</span>
                         )}
                       </motion.div>
-                      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-full group-hover:translate-x-full duration-1000" />
                     </div>
-                    <span className="font-bold text-sm group-hover:text-primary transition-colors">{badge.name}</span>
+                    <span className={`font-bold text-sm transition-colors ${badge.unlocked ? 'text-primary' : 'text-on-surface-variant'}`}>{badge.unlocked ? badge.name : 'Terkunci'}</span>
                   </motion.div>
                 ))}
               </div>
