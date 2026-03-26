@@ -1552,19 +1552,21 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                 ))}
                 {state.entries[0].aiMetadata && (
                   <div className="col-span-1 md:col-span-2 lg:col-span-4 mt-2 px-2 py-3 bg-surface-container-low rounded-xl border border-outline-variant/10 flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined notranslate" translate="no">&#xe94f;</span>
-                      <span className="text-[10px] font-bold text-outline-variant uppercase">AI Insights:</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="material-symbols-outlined notranslate text-primary" translate="no">&#xe94f;</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 shrink-0">
                       {state.entries[0].aiMetadata.tags.map((tag, idx) => (
-                        <span key={idx} className="text-xs font-medium text-secondary">#{tag}</span>
+                        <span key={idx} className="text-xs font-black text-secondary uppercase tracking-tighter">#{tag}</span>
                       ))}
                     </div>
-                    <div className="hidden md:block h-4 w-px bg-outline-variant/20 mx-2" />
-                    <p className="text-xs text-on-surface-variant italic truncate">
-                      "{state.entries[0].aiMetadata.summary}"
-                    </p>
+                    <div className="hidden md:block h-4 w-px bg-outline-variant/20 mx-2 shrink-0" />
+                    <div className="flex-grow marquee-container">
+                      <p className="text-xs text-on-surface-variant italic animate-marquee">
+                        <span className="font-black text-primary uppercase mr-1">{state.user?.name || 'Samuel'}</span>
+                        Catatan ini menunjukkan pertumbuhan imanmu hari ini. Tetap semangat, Tuhan Yesus memberkati 😇
+                      </p>
+                    </div>
                   </div>
                 )}
               </>
