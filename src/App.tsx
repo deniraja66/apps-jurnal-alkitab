@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, useRef, ChangeEvent } from 'react';
+import React, { useState, useEffect, useMemo, useRef, ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Instagram, Music2, MessageCircle } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
@@ -907,7 +907,40 @@ function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
   );
 }
 
+function InfoPopup({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="glass-card w-full max-w-lg max-h-[80vh] overflow-y-auto custom-scrollbar rounded-3xl p-8 border border-primary/30 shadow-2xl relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface bg-surface-container-high/50 rounded-full w-8 h-8 flex items-center justify-center"
+        >
+          <span className="material-symbols-outlined notranslate text-lg" translate="no">&#xe5cd;</span>
+        </button>
+        <h3 className="font-headline text-2xl font-bold text-primary mb-6 border-b border-outline-variant/10 pb-4">{title}</h3>
+        <div className="text-on-surface-variant space-y-4">
+          {children}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
+  const [subPopup, setSubPopup] = useState<'games' | 'prayer' | null>(null);
+
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
@@ -920,123 +953,182 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="glass-card w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl p-8 border border-primary/30 shadow-2xl relative"
+        className="glass-card w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl p-8 border border-primary/30 shadow-2xl relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface bg-surface-container-high/50 rounded-full w-8 h-8 flex items-center justify-center"
+          className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface bg-surface-container-high/50 rounded-full w-8 h-8 flex items-center justify-center z-20"
         >
           <span className="material-symbols-outlined notranslate text-lg" translate="no">&#xe5cd;</span>
         </button>
 
-        <div className="flex flex-col items-center text-center mb-8 mt-2">
-          <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary/30 shadow-lg">
-            <img src={getAssetUrl("/img/profil.png")} alt="Developer" className="w-full h-full object-cover" />
-          </div>
-          <h2 className="font-headline text-2xl font-bold">DENI RAJA99</h2>
-          <p className="text-primary text-sm font-bold uppercase tracking-widest">Pendidik di SDN KEJURON</p>
-        </div>
-
-        <div className="space-y-6">
-          <section>
-            <h3 className="text-xs font-bold text-outline uppercase tracking-widest mb-3">Keahlian</h3>
-            <div className="flex flex-wrap gap-2">
-              {['React', 'TypeScript', 'Tailwind', 'Node.js', 'Firebase', 'AI Integration'].map(skill => (
-                <span key={skill} className="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-bold border border-outline-variant/20">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h3 className="text-xs font-bold text-outline uppercase tracking-widest mb-3">Proyek Unggulan</h3>
-            <div className="space-y-3">
-              {/* Proyek 1: Jurnal Alkitab Anak */}
-              <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
-                  <img src={getAssetUrl("/img/logo.png")} alt="Jurnal Alkitab Anak-anak" className="w-full h-full object-cover" />
+        <AnimatePresence mode="wait">
+          {!subPopup ? (
+            <motion.div
+              key="main"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <div className="flex flex-col items-center text-center mb-8 mt-2">
+                <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary/30 shadow-lg">
+                  <img src={getAssetUrl("/img/profil.png")} alt="Developer" className="w-full h-full object-cover" />
                 </div>
-                <div className="text-left flex-grow">
-                  <h4 className="text-sm font-bold transition-colors">Jurnal Alkitab Anak-anak</h4>
-                  <p className="text-[10px] text-on-surface-variant leading-tight">Aplikasi jurnal Alkitab yang menyenangkan dan interaktif untuk anak-anak.</p>
-                </div>
+                <h2 className="font-headline text-2xl font-bold">DENI RAJA99</h2>
+                <p className="text-primary text-sm font-bold uppercase tracking-widest">Pendidik di SDN KEJURON</p>
               </div>
 
-              {/* Proyek 2: Penjelajah Alkitab */}
-              <div className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
-                    <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no" dangerouslySetInnerHTML={{ __html: '&#xeb9b;' }}></span>
+              <div className="space-y-6">
+                <section>
+                  <h3 className="text-xs font-bold text-outline uppercase tracking-widest mb-3">Keahlian</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {['React', 'TypeScript', 'Tailwind', 'Node.js', 'Firebase', 'AI Integration'].map(skill => (
+                      <span key={skill} className="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-bold border border-outline-variant/20">
+                        {skill}
+                      </span>
+                    ))}
                   </div>
-                  <div className="text-left flex-grow">
-                    <h4 className="text-sm font-bold transition-colors">Penjelajah Alkitab</h4>
-                    <p className="text-[10px] text-on-surface-variant leading-tight">Permainan edukasi tentang Alkitab.</p>
+                </section>
+
+                <section>
+                  <h3 className="text-xs font-bold text-outline uppercase tracking-widest mb-3">Proyek Unggulan</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 transition-colors">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                        <img src={getAssetUrl("/img/logo.png")} alt="Jurnal Alkitab Anak-anak" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="text-left flex-grow">
+                        <h4 className="text-sm font-bold">Jurnal Alkitab Anak-anak</h4>
+                        <p className="text-[10px] text-on-surface-variant leading-tight">Aplikasi jurnal Alkitab yang menyenangkan dan interaktif untuk anak-anak.</p>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => setSubPopup('games')}
+                      className="w-full flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 hover:bg-primary/5 transition-all group"
+                    >
+                      <div className="flex items-center gap-3 text-left">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-primary/20 transition-colors">
+                          <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no">&#xeb9b;</span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold group-hover:text-primary transition-colors">Penjelajah Alkitab</h4>
+                          <p className="text-[10px] text-on-surface-variant">Klik untuk daftar permainan edukasi</p>
+                        </div>
+                      </div>
+                      <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+                    </button>
+
+                    <button 
+                      onClick={() => setSubPopup('prayer')}
+                      className="w-full flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 hover:bg-primary/5 transition-all group"
+                    >
+                      <div className="flex items-center gap-3 text-left">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-primary/20 transition-colors">
+                          <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no">&#xea70;</span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold group-hover:text-primary transition-colors">Prajurit Doa</h4>
+                          <p className="text-[10px] text-on-surface-variant leading-tight">Klik untuk membaca Doa Bapa Kami</p>
+                        </div>
+                      </div>
+                      <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+                    </button>
                   </div>
-                </div>
-                <div className="space-y-2 pl-[3.25rem]">
-                  <a href="https://deniraja53.github.io/storytelling-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
-                    <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 group-hover:bg-secondary/40 transition-colors">
-                      <span className="material-symbols-outlined text-[14px] text-secondary" translate="no">&#xe02f;</span>
-                    </div>
-                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">Menyusun Cerita</span>
-                  </a>
-                  <a href="https://deniraja53.github.io/pitstop-deni-tts/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
-                    <div className="w-6 h-6 rounded-full bg-tertiary/20 flex items-center justify-center shrink-0 group-hover:bg-tertiary/40 transition-colors">
-                      <span className="material-symbols-outlined text-[14px] text-tertiary" translate="no">&#xe86f;</span>
-                    </div>
-                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">TTS</span>
-                  </a>
-                  <a href="https://deniraja53.github.io/code-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/40 transition-colors">
-                      <span className="material-symbols-outlined text-[14px] text-primary" translate="no">&#xe869;</span>
-                    </div>
-                    <span className="text-[11px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">Bible Code</span>
-                  </a>
-                </div>
+                </section>
               </div>
 
-              {/* Proyek 3: Prajurit Doa */}
-              <div className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
-                    <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no" dangerouslySetInnerHTML={{ __html: '&#xea70;' }}></span>
+              <div className="mt-8 pt-6 border-t border-outline-variant/10 flex justify-center gap-4">
+                <a href="https://instagram.com/deni_raja99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+                  <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
+                </a>
+                <a href="https://tiktok.com/@denoxz99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+                  <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
+                </a>
+                <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
+                  <img src={getAssetUrl("/img/medsos/whatsapp.jpg")} alt="WhatsApp" className="w-full h-full object-cover" />
+                </a>
+              </div>
+            </motion.div>
+          ) : subPopup === 'games' ? (
+            <motion.div
+              key="games"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="py-4"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <button onClick={() => setSubPopup(null)} className="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+                  <span className="material-symbols-outlined text-outline">arrow_back</span>
+                </button>
+                <h3 className="font-headline text-xl font-bold text-primary">Penjelajah Alkitab</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <a href="https://deniraja53.github.io/storytelling-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-secondary/50 hover:bg-secondary/5 transition-all group">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 group-hover:bg-secondary/40 transition-colors shadow-lg shadow-secondary/10">
+                    <span className="material-symbols-outlined text-2xl text-secondary" translate="no">&#xe02f;</span>
                   </div>
-                  <div className="text-left flex-grow">
-                    <h4 className="text-sm font-bold transition-colors">Prajurit Doa</h4>
-                    <p className="text-[10px] text-on-surface-variant leading-tight">Aplikasi komunitas doa.</p>
+                  <div>
+                    <span className="text-sm font-bold block mb-0.5">Menyusun Cerita</span>
+                    <span className="text-[10px] text-on-surface-variant">Bercerita dengan cara yang seru!</span>
                   </div>
-                </div>
-                <div className="text-[11px] text-on-surface-variant leading-relaxed border-l-2 border-primary/20 ml-5 pl-4 py-1 italic">
-                  <p className="font-bold text-primary mb-1 not-italic">DOA BAPA KAMI (Matius 6:9-13)</p>
-                  <p>Bapa kami yang di surga,<br/>
-                  Dikuduskanlah nama-Mu.<br/>
-                  Datanglah kerajaan-Mu.<br/>
-                  Jadilah kehendak-Mu di bumi seperti di surga.<br/>
-                  Berikanlah kami pada hari ini makanan kami yang secukupnya.<br/>
-                  Dan ampunilah kami akan kesalahan kami,<br/>
-                  seperti kami juga mengampuni orang yang bersalah kepada kami.<br/>
-                  Dan janganlah membawa kami ke dalam pencobaan,<br/>
-                  tetapi lepaskanlah kami dari pada yang jahat.</p>
-                  <p className="mt-1">(Karena Engkaulah yang empunya Kerajaan dan kuasa dan kemuliaan sampai selama-lamanya. Amin)</p>
+                </a>
+                
+                <a href="https://deniraja53.github.io/pitstop-deni-tts/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-tertiary/50 hover:bg-tertiary/5 transition-all group">
+                  <div className="w-12 h-12 rounded-full bg-tertiary/20 flex items-center justify-center shrink-0 group-hover:bg-tertiary/40 transition-colors shadow-lg shadow-tertiary/10">
+                    <span className="material-symbols-outlined text-2xl text-tertiary" translate="no">&#xe86f;</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold block mb-0.5">Teka Teki Silang (TTS)</span>
+                    <span className="text-[10px] text-on-surface-variant">Uji pengetahuan Alkitabmu.</span>
+                  </div>
+                </a>
+                
+                <a href="https://deniraja53.github.io/code-bible/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/50 hover:bg-primary/5 transition-all group">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/40 transition-colors shadow-lg shadow-primary/10">
+                    <span className="material-symbols-outlined text-2xl text-primary" translate="no">&#xe869;</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold block mb-0.5">Bible Code</span>
+                    <span className="text-[10px] text-on-surface-variant">Pecahkan kode rahasia Alkitab.</span>
+                  </div>
+                </a>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="prayer"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="py-4"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <button onClick={() => setSubPopup(null)} className="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+                  <span className="material-symbols-outlined text-outline">arrow_back</span>
+                </button>
+                <h3 className="font-headline text-xl font-bold text-primary">Prajurit Doa</h3>
+              </div>
+              
+              <div className="bg-surface-container-low p-6 rounded-2xl border border-primary/20 italic">
+                <p className="font-headline font-bold text-primary mb-4 not-italic text-center">DOA BAPA KAMI<br/><span className="text-xs text-outline font-normal uppercase tracking-widest">(Matius 6:9-13)</span></p>
+                <div className="text-sm text-center text-on-surface-variant leading-relaxed space-y-2">
+                  <p>Bapa kami yang di surga,<br/>Dikuduskanlah nama-Mu.</p>
+                  <p>Datanglah kerajaan-Mu.<br/>Jadilah kehendak-Mu<br/>di bumi seperti di surga.</p>
+                  <p>Berikanlah kami pada hari ini<br/>makanan kami yang secukupnya.</p>
+                  <p>Dan ampunilah kami akan kesalahan kami,<br/>seperti kami juga mengampuni orang yang bersalah kepada kami.</p>
+                  <p>Dan janganlah membawa kami ke dalam pencobaan,<br/>tetapi lepaskanlah kami dari pada yang jahat.</p>
+                  <p className="mt-4 font-bold not-italic text-primary">
+                    (Karena Engkaulah yang empunya Kerajaan dan kuasa dan kemuliaan sampai selama-lamanya. Amin)
+                  </p>
                 </div>
               </div>
-            </div>
-          </section>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-outline-variant/10 flex justify-center gap-4">
-          <a href="https://instagram.com/deni_raja99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src={getAssetUrl("/img/medsos/instagram.jpg")} alt="Instagram" className="w-full h-full object-cover" />
-          </a>
-          <a href="https://tiktok.com/@denoxz99" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src={getAssetUrl("/img/medsos/tiktok.jpg")} alt="TikTok" className="w-full h-full object-cover" />
-          </a>
-          <a href="https://wa.me/628" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform bg-surface-container-high border border-outline-variant/10">
-            <img src={getAssetUrl("/img/medsos/whatsapp.jpg")} alt="WhatsApp" className="w-full h-full object-cover" />
-          </a>
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
@@ -1044,6 +1136,7 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
 
 function Footer({ user }: { user: UserProfile | null }) {
   const [showPortfolio, setShowPortfolio] = useState(false);
+  const [activeInfo, setActiveInfo] = useState<'privacy' | 'guide' | 'help' | null>(null);
 
   return (
     <footer className="py-16 px-8 border-t border-outline-variant/10 bg-surface-container-low mt-auto">
@@ -1094,10 +1187,10 @@ function Footer({ user }: { user: UserProfile | null }) {
         
         <div className="pt-8 border-t border-outline-variant/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-on-surface-variant text-xs">© 2026 Children's Bible Journal. Sparkle & Learn.</p>
-          <div className="flex gap-6 text-xs text-on-surface-variant">
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Parent Guide</a>
-            <a href="#" className="hover:text-primary transition-colors">Help</a>
+          <div className="flex gap-6 text-xs text-on-surface-variant font-bold">
+            <button onClick={() => setActiveInfo('privacy')} className="hover:text-primary transition-colors">Privasi</button>
+            <button onClick={() => setActiveInfo('guide')} className="hover:text-primary transition-colors">Panduan Orang Tua</button>
+            <button onClick={() => setActiveInfo('help')} className="hover:text-primary transition-colors">Bantuan</button>
           </div>
         </div>
       </div>
@@ -1105,6 +1198,63 @@ function Footer({ user }: { user: UserProfile | null }) {
       <AnimatePresence>
         {showPortfolio && (
           <DeveloperPortfolioPopup onClose={() => setShowPortfolio(false)} />
+        )}
+        
+        {activeInfo === 'privacy' && (
+          <InfoPopup title="Kebijakan Privasi" onClose={() => setActiveInfo(null)}>
+            <p className="font-bold text-on-surface">Data Anak-anak Sangat Berharga</p>
+            <p className="text-sm">Aplikasi ini dirancang khusus untuk anak-anak. Kami berkomitmen untuk melindungi privasi Anda. Kami tidak mengumpulkan informasi identitas pribadi (PII) tanpa persetujuan eksplisit.</p>
+            <ul className="list-disc pl-5 text-sm space-y-2">
+              <li>Semua data jurnal disimpan secara lokal di perangkat Anda.</li>
+              <li>Data yang dikirimkan ke webhook hanya berupa catatan jurnal anonim (jika diaktifkan).</li>
+              <li>Kami tidak menjual atau membagikan data Anda dengan pihak ketiga.</li>
+            </ul>
+          </InfoPopup>
+        )}
+        
+        {activeInfo === 'guide' && (
+          <InfoPopup title="Panduan Orang Tua" onClose={() => setActiveInfo(null)}>
+            <p className="font-bold text-on-surface">Membangun Karakter Melalui Ayat Firman</p>
+            <p className="text-sm">Bible Journal membantu anak-anak mengenali kebenaran Firman Tuhan melalui metode S.O.A.P:</p>
+            <div className="grid grid-cols-2 gap-3 text-[10px]">
+              <div className="p-3 bg-primary/5 rounded-xl border border-primary/20">
+                <p className="font-bold text-primary">SCRIPTURE</p>
+                <p>Membaca dasar ayat Alkitab hari ini.</p>
+              </div>
+              <div className="p-3 bg-secondary/5 rounded-xl border border-secondary/20">
+                <p className="font-bold text-secondary">OBSERVATION</p>
+                <p>Apa yang anak lihat dari ayat tersebut?</p>
+              </div>
+              <div className="p-3 bg-tertiary/5 rounded-xl border border-tertiary/20">
+                <p className="font-bold text-tertiary">APPLICATION</p>
+                <p>Bagaimana menerapkannya di hidup sehari-hari?</p>
+              </div>
+              <div className="p-3 bg-on-surface/5 rounded-xl border border-outline-variant/20">
+                <p className="font-bold">PRAYER</p>
+                <p>Membawa Firman Tuhan dalam doa pribadi.</p>
+              </div>
+            </div>
+          </InfoPopup>
+        )}
+        
+        {activeInfo === 'help' && (
+          <InfoPopup title="Pusat Bantuan" onClose={() => setActiveInfo(null)}>
+            <p className="font-bold text-on-surface">Cara Menggunakan Jurnal</p>
+            <div className="space-y-4 text-sm">
+              <div className="border-l-4 border-primary pl-4">
+                <p className="font-bold">Bagaimana cara mendapatkan Lencana?</p>
+                <p className="text-xs">Teruslah mencatat jurnal setiap hari. Lencana akan terbuka secara otomatis seiring bertambahnya jumlah hari aktif Anda.</p>
+              </div>
+              <div className="border-l-4 border-secondary pl-4">
+                <p className="font-bold">Data Saya Hilang?</p>
+                <p className="text-xs">Aplikasi ini menyimpan data di browser Anda. Jika Anda menghapus cache browser, data jurnal lokal Anda mungkin akan ikut terhapus.</p>
+              </div>
+              <div className="border-l-4 border-tertiary pl-4">
+                <p className="font-bold">Hubungi Support</p>
+                <p className="text-xs">Jika ada kendala teknis, silakan hubungi pengembang melalui menu media sosial di bagian Hubungi Kami.</p>
+              </div>
+            </div>
+          </InfoPopup>
         )}
       </AnimatePresence>
     </footer>
