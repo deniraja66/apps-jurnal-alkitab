@@ -31,6 +31,7 @@ export interface Badge {
   url?: string;
   unlocked: boolean;
   color: string;
+  requiredDays: number;
 }
 
 export interface Notification {

@@ -3,15 +3,15 @@ import { Badge, Notification, Reward } from './types';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 export const INITIAL_BADGES: Badge[] = [
-  { id: '1', name: 'PEMULA', icon: '🌱', url: `${base}/img/lencana/pemula.png`, unlocked: true, color: 'tertiary' },
-  { id: '2', name: 'SETIA', icon: '🛡️', url: `${base}/img/lencana/setia.png`, unlocked: true, color: 'primary' },
-  { id: '3', name: 'DAMAI', icon: '🕊️', url: `${base}/img/lencana/damai.png`, unlocked: true, color: 'secondary' },
-  { id: '4', name: 'BINTANG 7 HARI', icon: '⭐', url: `${base}/img/lencana/bintang 7 hari.png`, unlocked: true, color: 'tertiary' },
-  { id: '5', name: 'PRAJURIT DOA', icon: '✨', url: `${base}/img/lencana/prajurit doa.png`, unlocked: true, color: 'secondary' },
-  { id: '6', name: 'PENYELAM DALAM', icon: '🚀', url: `${base}/img/lencana/penyelam dalam.png`, unlocked: true, color: 'primary' },
-  { id: '7', name: 'Lion', icon: '🦁', unlocked: false, color: 'surface-variant' },
-  { id: '8', name: 'Warrior', icon: '⚔️', unlocked: false, color: 'surface-variant' },
-  { id: '9', name: 'King', icon: '👑', unlocked: false, color: 'surface-variant' },
+  { id: '1', name: 'PEMULA', icon: '🌱', url: `${base}/img/lencana/pemula.png`, unlocked: true, color: 'tertiary', requiredDays: 0 },
+  { id: '2', name: 'SETIA', icon: '🛡️', url: `${base}/img/lencana/setia.png`, unlocked: true, color: 'primary', requiredDays: 3 },
+  { id: '3', name: 'DAMAI', icon: '🕊️', url: `${base}/img/lencana/damai.png`, unlocked: true, color: 'secondary', requiredDays: 5 },
+  { id: '4', name: 'BINTANG 181 HARI', icon: '⭐', url: `${base}/img/lencana/bintang 7 hari.png`, unlocked: true, color: 'tertiary', requiredDays: 7 },
+  { id: '5', name: 'PRAJURIT DOA', icon: '✨', url: `${base}/img/lencana/prajurit doa.png`, unlocked: true, color: 'secondary', requiredDays: 14 },
+  { id: '6', name: 'PENYELAM DALAM', icon: '🚀', url: `${base}/img/lencana/penyelam dalam.png`, unlocked: true, color: 'primary', requiredDays: 30 },
+  { id: '7', name: 'Lion', icon: '🦁', unlocked: false, color: 'surface-variant', requiredDays: 60 },
+  { id: '8', name: 'Warrior', icon: '⚔️', unlocked: false, color: 'surface-variant', requiredDays: 90 },
+  { id: '9', name: 'King', icon: '👑', unlocked: false, color: 'surface-variant', requiredDays: 120 },
 ];
 
 export const INITIAL_NOTIFICATIONS: Notification[] = [
