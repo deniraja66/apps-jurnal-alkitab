@@ -1550,25 +1550,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                     </p>
                   </div>
                 ))}
-                {state.entries[0].aiMetadata && (
-                  <div className="col-span-1 md:col-span-2 lg:col-span-4 mt-2 px-2 py-3 bg-surface-container-low rounded-xl border border-outline-variant/10 flex items-center gap-4">
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="material-symbols-outlined notranslate text-primary" translate="no">&#xe94f;</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 shrink-0">
-                      {state.entries[0].aiMetadata.tags.map((tag, idx) => (
-                        <span key={idx} className="text-xs font-black text-secondary uppercase tracking-tighter">#{tag}</span>
-                      ))}
-                    </div>
-                    <div className="hidden md:block h-4 w-px bg-outline-variant/20 mx-2 shrink-0" />
-                    <div className="flex-grow marquee-container">
-                      <p className="text-xs text-on-surface-variant italic animate-marquee">
-                        <span className="font-black text-primary uppercase mr-1">{state.user?.name || 'Samuel'}</span>
-                        Catatan ini menunjukkan pertumbuhan imanmu hari ini. Tetap semangat, Tuhan Yesus memberkati 😇
-                      </p>
-                    </div>
-                  </div>
-                )}
+
               </>
             ) : (
               ['S', 'O', 'A', 'P'].map((letter, i) => (
@@ -1578,6 +1560,25 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                 </div>
               ))
             )}
+          </div>
+          
+          {/* Permanent Marquee AI Insight section */}
+          <div className="mt-4 px-2 py-3 bg-surface-container-low rounded-xl border border-outline-variant/10 flex items-center gap-4">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="material-symbols-outlined notranslate text-primary" translate="no">&#xe94f;</span>
+            </div>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              {(state.entries[0]?.aiMetadata?.tags || ['Alkitab', 'Iman', 'Doa']).map((tag, idx) => (
+                <span key={idx} className="text-xs font-black text-secondary uppercase tracking-tighter">#{tag}</span>
+              ))}
+            </div>
+            <div className="hidden md:block h-4 w-px bg-outline-variant/20 mx-2 shrink-0" />
+            <div className="flex-grow marquee-container">
+              <p className="text-xs text-on-surface-variant italic animate-marquee">
+                <span className="font-black text-primary uppercase mr-1">{state.user?.name || 'Samuel'}</span>
+                Catatan ini menunjukkan pertumbuhan imanmu hari ini. Tetap semangat, Tuhan Yesus memberkati 😇
+              </p>
+            </div>
           </div>
         </section>
       </main>
