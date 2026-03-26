@@ -615,7 +615,7 @@ function OnboardingScreen({ onComplete }: { onComplete: (name: string, avatar: s
             }}
           />
         </motion.div>
-        <p className="text-on-surface-variant text-lg mb-10">Pilih temanmu dan tulis namamu untuk mulai berpetualang!</p>
+        <p className="text-on-surface-variant text-lg mb-10">Pilih Karaktermu dan tulis namamu untuk mulai berpetualang</p>
 
         <div className="w-full max-w-sm mb-8">
           <label className="block text-left text-sm font-label text-secondary mb-3 ml-2">Nama</label>
