@@ -1010,7 +1010,7 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
                     >
                       <div className="flex items-center gap-3 text-left">
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-primary/20 transition-colors">
-                          <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no">&#xeb9b;</span>
+                          <img src={getAssetUrl("/img/penjelajah alkitab.jpeg")} alt="Penjelajah Alkitab" className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <h4 className="text-sm font-bold group-hover:text-primary transition-colors">Penjelajah Alkitab</h4>
@@ -1026,7 +1026,7 @@ function DeveloperPortfolioPopup({ onClose }: { onClose: () => void }) {
                     >
                       <div className="flex items-center gap-3 text-left">
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-primary/20 transition-colors">
-                          <span className="material-symbols-outlined notranslate text-primary text-xl" translate="no">&#xea70;</span>
+                          <img src={getAssetUrl("/img/prajurit doa.jpeg")} alt="Prajurit Doa" className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <h4 className="text-sm font-bold group-hover:text-primary transition-colors">Prajurit Doa</h4>
