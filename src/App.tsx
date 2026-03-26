@@ -1361,8 +1361,8 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
       <main className="max-w-6xl mx-auto px-6 py-12 w-full">
         <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-2 bg-gradient-to-r from-on-surface to-secondary bg-clip-text text-transparent">
-              Hallo... {state.user?.name || 'Samuel'} 👋
+            <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-2 text-on-surface">
+              Hallo... <span className="text-primary">{state.user?.name || 'Samuel'}</span> 👋
             </h1>
             <p className="text-on-surface-variant text-lg">Siap untuk petualangan iman hari ini?</p>
           </div>
@@ -1399,7 +1399,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-semibold">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 text-primary-container text-xs font-black shadow-sm">
                     <span className="material-symbols-outlined notranslate text-sm fill-icon" translate="no">&#xe838;</span>
                     BACAAN HARI INI
                   </div>
