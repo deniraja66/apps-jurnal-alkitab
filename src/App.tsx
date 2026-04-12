@@ -110,10 +110,12 @@ export default function App() {
       screen: 'loading' as Screen,
       user: null,
       currentDay: 1,
+      selectedDay: 1,
       streak: 0,
       xp: 0,
       level: 1,
       entries: [],
+      completedDays: [],
       badges: INITIAL_BADGES,
       notifications: INITIAL_NOTIFICATIONS,
       rewards: INITIAL_REWARDS,
@@ -126,14 +128,16 @@ export default function App() {
           ...defaults,
           ...parsed, 
           screen: 'loading',
+          selectedDay: parsed.currentDay || defaults.currentDay,
           // Compute unlocked status based on currentDay
           badges: INITIAL_BADGES.map((ib: Badge) => ({
             ...ib,
-            unlocked: (parsed.currentDay || defaults.currentDay) >= ib.requiredDays
+            unlocked: (parsed.completedDays?.length || 0) >= ib.requiredDays
           })),
           notifications: parsed.notifications || INITIAL_NOTIFICATIONS,
           rewards: parsed.rewards || INITIAL_REWARDS,
           entries: parsed.entries || [],
+          completedDays: parsed.completedDays || (parsed.entries ? [...new Set(parsed.entries.map((e: any) => e.day))] : []),
         };
       } catch (e) {
         console.error("Failed to parse saved state", e);
@@ -171,8 +175,8 @@ export default function App() {
     }
   }, [state]);
 
-  const navigate = (screen: Screen) => {
-    setState(prev => ({ ...prev, screen }));
+  const navigate = (screen: Screen, updateState?: Partial<AppState>) => {
+    setState(prev => ({ ...prev, screen, ...updateState }));
   };
 
   const handleOnboarding = (name: string, avatar: string, schoolName: string) => {
@@ -296,41 +300,36 @@ export default function App() {
       ...entry,
       id: newId,
       date: new Date().toISOString().split('T')[0],
-      day: state.currentDay
+      day: state.selectedDay || state.currentDay
     };
 
     // UI Feedback: Immediately navigate and show rewards
     setState(prev => {
-      // Calculate streak based on number of unique days in entries
+      const entryDay = state.selectedDay || state.currentDay;
+      const isNewCompletion = entryDay === prev.currentDay;
+      
       const newEntries = [newEntry, ...prev.entries];
-      const uniqueDays = new Set(newEntries.map(e => e.day)).size;
+      const newCompletedDays = Array.from(new Set([...prev.completedDays, entryDay]));
       
       return {
         ...prev,
         entries: newEntries,
+        completedDays: newCompletedDays,
         screen: 'reward',
         xp: prev.xp + 50,
-        streak: uniqueDays, // Streak corresponds to days worked
+        streak: newCompletedDays.length, // Streak corresponds to days worked
         notifications: [
           {
             id: Math.random().toString(36).substr(2, 9),
             title: 'S.O.A.P Selesai! 🎉',
-            message: `Selamat! Kamu telah menyelesaikan jurnal untuk Hari ${state.currentDay}.`,
+            message: `Selamat! Kamu telah menyelesaikan jurnal untuk Hari ${entryDay}.`,
             date: new Date().toISOString(),
             read: false,
             type: 'achievement'
           },
-          {
-            id: Math.random().toString(36).substr(2, 9),
-            title: 'Misi Baru Terbuka! 📖',
-            message: `Bintang kecil! Hari ${state.currentDay + 1} sudah menunggu untuk disinari.`,
-            date: new Date().toISOString(),
-            read: false,
-            type: 'info'
-          },
           ...prev.notifications
         ],
-        currentDay: prev.currentDay + 1 // Advance to next day automatically
+        currentDay: isNewCompletion ? prev.currentDay + 1 : prev.currentDay
       };
     });
 
@@ -386,36 +385,12 @@ export default function App() {
     }));
   };
 
-  useEffect(() => {
-    if (state.user?.startDate) {
-      const calculateDay = () => {
-        const start = new Date(state.user!.startDate);
-        const now = new Date();
-        // Reset hours to compare dates only
-        start.setHours(0, 0, 0, 0);
-        now.setHours(0, 0, 0, 0);
-        
-        const diffTime = Math.abs(now.getTime() - start.getTime());
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        
-        // Only advance the day if the calendar is ahead of the current progress
-        if (diffDays > state.currentDay) {
-          setState(prev => ({ ...prev, currentDay: diffDays }));
-        }
-      };
 
-      calculateDay();
-      // Check every hour if the day has changed
-      const interval = setInterval(calculateDay, 3600000);
-      return () => clearInterval(interval);
-    }
-  }, [state.user?.startDate, state.currentDay]);
-
-  // Keep badges synced with currentDay
+  // Keep badges synced with completedDays
   useEffect(() => {
     setState(prev => {
       const needsUpdate = INITIAL_BADGES.some(ib => 
-        (prev.currentDay >= ib.requiredDays) !== prev.badges.find(b => b.id === ib.id)?.unlocked
+        (prev.completedDays.length >= ib.requiredDays) !== prev.badges.find(b => b.id === ib.id)?.unlocked
       );
       if (!needsUpdate) return prev;
       
@@ -423,11 +398,11 @@ export default function App() {
         ...prev,
         badges: INITIAL_BADGES.map(ib => ({
           ...ib,
-          unlocked: prev.currentDay >= ib.requiredDays
+          unlocked: prev.completedDays.length >= ib.requiredDays
         }))
       };
     });
-  }, [state.currentDay]);
+  }, [state.completedDays.length]);
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
@@ -686,7 +661,7 @@ function OnboardingScreen({ onComplete }: { onComplete: (name: string, avatar: s
 
 function Navbar({ state, navigate, onMarkRead, onClaimReward, onLogout }: { 
   state: AppState; 
-  navigate: (s: Screen) => void;
+  navigate: (screen: Screen, updateState?: Partial<AppState>) => void;
   onMarkRead: (id: string) => void;
   onClaimReward: (id: string) => void;
   onLogout: () => void;
@@ -1321,7 +1296,7 @@ const CosmicBackground = () => {
 
 function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: { 
   state: AppState; 
-  navigate: (s: Screen) => void; 
+  navigate: (screen: Screen, updateState?: Partial<AppState>) => void; 
   onMarkRead: (id: string) => void;
   onClaimReward: (id: string) => void;
   onLogout: () => void;
@@ -1420,7 +1395,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                 </div>
               </div>
               <button
-                onClick={() => navigate('daily-reading')}
+                onClick={() => navigate('daily-reading', { selectedDay: state.currentDay })}
                 className="bg-gradient-to-b from-primary to-primary-container text-on-primary-container px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:scale-105 transition-transform shadow-lg w-fit"
               >
                 Baca Firman
@@ -1444,12 +1419,12 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-75 group-hover:scale-100 transition-transform duration-700" />
             </div>
             
-            <h3 className="font-headline text-2xl font-bold mb-1">Streak Membaca</h3>
+            <h3 className="font-headline text-2xl font-bold mb-1">Total Progres</h3>
             <p className="text-on-surface-variant text-sm mb-4 italic">Semangat terus, pahlawan Kristus!</p>
             <div className="text-5xl font-extrabold text-primary font-headline tracking-tighter drop-shadow-sm">
-              {new Set(state.entries.map(e => e.day)).size} Hari
+              {state.completedDays.length} Hari
             </div>
-            <p className="text-[10px] text-outline mt-3 uppercase font-black tracking-[0.2em] opacity-60">Berturut-turut Aktif</p>
+            <p className="text-[10px] text-outline mt-3 uppercase font-black tracking-[0.2em] opacity-60">Selesai</p>
           </div>
 
           {/* Progress Card */}
@@ -1474,7 +1449,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
                   <span className="material-symbols-outlined notranslate text-emerald-500 fill-icon text-2xl" translate="no">&#xe86c;</span>
                 )}
                 <div>
-                  <span className="text-3xl font-headline font-bold text-secondary">{state.currentDay}</span>
+                  <span className="text-3xl font-headline font-bold text-secondary">{state.completedDays.length}</span>
                   <span className="text-on-surface-variant text-lg"> / 365 Hari</span>
                 </div>
               </div>
@@ -1483,7 +1458,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
               <div className="overflow-hidden h-4 mb-4 text-xs flex rounded-full bg-surface-container-highest">
                 <div
                   className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-secondary to-primary rounded-full relative transition-all duration-1000"
-                  style={{ width: `${(state.currentDay / 365) * 100}%` }}
+                  style={{ width: `${(state.completedDays.length / 365) * 100}%` }}
                 >
                   <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-on-surface rounded-full flex items-center justify-center shadow-lg">
                     <span className="material-symbols-outlined notranslate text-primary text-xs fill-icon" translate="no">&#xeb9b;</span>
@@ -1589,7 +1564,7 @@ function HomeScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: {
 
 function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: { 
   state: AppState; 
-  navigate: (s: Screen) => void; 
+  navigate: (screen: Screen, updateState?: Partial<AppState>) => void; 
   onMarkRead: (id: string) => void;
   onClaimReward: (id: string) => void;
   onLogout: () => void;
@@ -1625,7 +1600,10 @@ function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogou
               <h3 className="font-headline font-bold text-lg">Hampir Sampai, Bintang Kecil!</h3>
               <p className="text-on-surface-variant text-sm">{state.currentDay} dari 365 hari telah selesai disinari.</p>
             </div>
-            <button onClick={() => navigate('daily-reading')} className="px-6 py-3 rounded-xl cosmic-gradient text-on-primary font-bold shadow-lg">
+            <button 
+              onClick={() => navigate('daily-reading', { selectedDay: state.currentDay })}
+              className="px-6 py-3 rounded-xl cosmic-gradient text-on-primary font-bold shadow-lg"
+            >
               Lanjut Membaca
             </button>
           </div>
@@ -1658,9 +1636,10 @@ function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogou
               const day = i + 1;
               const dailyReading = getReadingForDay(day);
               const hasEntry = state.entries?.some(e => e.day === day);
-              const isCompleted = day < state.currentDay || hasEntry;
+              const isCompleted = state.completedDays.includes(day);
               const isToday = day === state.currentDay;
-              const isLocked = day > state.currentDay;
+              const isUnlocked = day === 1 || state.completedDays.includes(day - 1);
+              const isLocked = !isUnlocked;
 
               return (
                 <div key={day} className={`group flex items-center gap-6 ${isLocked ? 'opacity-40' : 'opacity-100'} transition-all duration-300`}>
@@ -1673,7 +1652,13 @@ function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogou
                     {isLocked && <span className="material-symbols-outlined notranslate text-outline-variant text-3xl" translate="no">&#xe897;</span>}
                   </div>
                   <div 
-                    onClick={() => !isLocked && navigate('daily-reading')}
+                    onClick={() => {
+                      if (isLocked) {
+                        alert("Selesaikan hari sebelumnya dulu ya 😊");
+                        return;
+                      }
+                      navigate('daily-reading', { selectedDay: day });
+                    }}
                     className={`flex-1 glass-card p-5 rounded-xl flex items-center justify-between transition-all cursor-pointer relative overflow-hidden ${isToday && !hasEntry ? 'ring-2 ring-primary bg-surface-container-highest' : isCompleted ? 'border-emerald-100 bg-emerald-50/30' : 'hover:bg-surface-container-highest'}`}
                   >
                     {!isLocked && (
@@ -1714,13 +1699,13 @@ function ReadingPlanScreen({ state, navigate, onMarkRead, onClaimReward, onLogou
 
 function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogout }: { 
   state: AppState; 
-  navigate: (s: Screen) => void; 
+  navigate: (screen: Screen, updateState?: Partial<AppState>) => void; 
   onMarkRead: (id: string) => void;
   onClaimReward: (id: string) => void;
   onLogout: () => void;
   key?: string 
 }) {
-  const dailyReading = getReadingForDay(state.currentDay);
+  const dailyReading = getReadingForDay(state.selectedDay || state.currentDay);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen flex flex-col relative">
@@ -1736,7 +1721,7 @@ function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogo
         <header className="mb-10 text-center relative p-8 rounded-3xl overflow-hidden">
           <div className="absolute inset-0 z-0 opacity-20">
             <img 
-              src={getAssetUrl(`/img/daily/day-${state.currentDay}.jfif`)}
+              src={getAssetUrl(`/img/daily/day-${state.selectedDay || state.currentDay}.jfif`)}
               onError={(e) => {
                 const t = e.currentTarget;
                 if (t.src.endsWith('.jfif')) t.src = t.src.replace('.jfif', '.jpeg');
@@ -1750,7 +1735,7 @@ function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogo
           <div className="absolute inset-0 bg-gradient-to-b from-surface/40 to-surface z-0" />
           <div className="relative z-10">
             <h1 className="font-headline text-4xl font-extrabold mb-2 text-on-surface">Bacaan Hari Ini</h1>
-            <p className="text-secondary font-bold tracking-wide text-lg">Hari {state.currentDay} {dailyReading.reference}</p>
+            <p className="text-secondary font-bold tracking-wide text-lg">Hari {state.selectedDay} {dailyReading.reference}</p>
           </div>
         </header>
 
@@ -1791,7 +1776,7 @@ function DailyReadingScreen({ state, navigate, onMarkRead, onClaimReward, onLogo
           <div className="relative h-56 rounded-2xl overflow-hidden group shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-outline-variant/10">
             <img 
               className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" 
-              src={getAssetUrl(`/img/daily/day-${state.currentDay}.jfif`)} 
+              src={getAssetUrl(`/img/daily/day-${state.selectedDay}.jfif`)} 
               alt="Reading Visual" 
               referrerPolicy="no-referrer" 
               onError={(e) => {
@@ -2022,7 +2007,7 @@ function RewardScreen({ state, onContinue }: { state: AppState; onContinue: () =
 
 function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onClaimReward, onLogout }: { 
   state: AppState; 
-  navigate: (s: Screen) => void; 
+  navigate: (screen: Screen, updateState?: Partial<AppState>) => void; 
   onUpdateCustomAvatar: (url: string) => void; 
   onMarkRead: (id: string) => void;
   onClaimReward: (id: string) => void;
@@ -2141,7 +2126,7 @@ function ProfileScreen({ state, navigate, onUpdateCustomAvatar, onMarkRead, onCl
                   <div className="w-full bg-surface-container-highest h-4 rounded-full mb-8 overflow-hidden p-1">
                     <motion.div 
                       initial={{ width: 0 }}
-                      animate={{ width: `${(state.currentDay / 365) * 100}%` }}
+                      animate={{ width: `${(state.completedDays.length / 365) * 100}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
                       className="h-full cosmic-gradient rounded-full shadow-lg shadow-primary/20" 
                     />

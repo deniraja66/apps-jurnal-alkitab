@@ -65,10 +65,12 @@ export interface AppState {
   screen: Screen;
   user: UserProfile | null;
   currentDay: number;
+  selectedDay: number;
   streak: number;
   xp: number;
   level: number;
   entries: JournalEntry[];
+  completedDays: number[];
   badges: Badge[];
   notifications: Notification[];
   rewards: Reward[];

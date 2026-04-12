@@ -3,12 +3,12 @@ import { Badge, Notification, Reward } from './types';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 export const INITIAL_BADGES: Badge[] = [
-  { id: '1', name: 'Pemula', icon: '🌱', url: `${base}/img/lencana/pemula.png`, unlocked: false, color: 'tertiary', requiredDays: 1 },
-  { id: '2', name: 'Setia', icon: '🛡️', url: `${base}/img/lencana/setia.png`, unlocked: false, color: 'primary', requiredDays: 61 },
-  { id: '3', name: 'Damai', icon: '🕊️', url: `${base}/img/lencana/damai.png`, unlocked: false, color: 'secondary', requiredDays: 121 },
-  { id: '4', name: 'Bintang 181', icon: '⭐', url: `${base}/img/lencana/bintang 7 hari.png`, unlocked: false, color: 'tertiary', requiredDays: 181 },
-  { id: '5', name: 'Prajurit Doa', icon: '✨', url: `${base}/img/lencana/prajurit doa.png`, unlocked: false, color: 'secondary', requiredDays: 241 },
-  { id: '6', name: 'Penyelam Dalam', icon: '🚀', url: `${base}/img/lencana/penyelam dalam.png`, unlocked: false, color: 'primary', requiredDays: 301 },
+  { id: '1', name: 'Beginner', icon: '🌱', url: `${base}/img/lencana/pemula.png`, unlocked: false, color: 'tertiary', requiredDays: 1 },
+  { id: '2', name: 'Explorer', icon: '🛡️', url: `${base}/img/lencana/setia.png`, unlocked: false, color: 'primary', requiredDays: 61 },
+  { id: '3', name: 'Faith Builder', icon: '🕊️', url: `${base}/img/lencana/damai.png`, unlocked: false, color: 'secondary', requiredDays: 121 },
+  { id: '4', name: 'Disciple', icon: '⭐', url: `${base}/img/lencana/bintang 7 hari.png`, unlocked: false, color: 'tertiary', requiredDays: 181 },
+  { id: '5', name: 'Warrior', icon: '✨', url: `${base}/img/lencana/prajurit doa.png`, unlocked: false, color: 'secondary', requiredDays: 241 },
+  { id: '6', name: 'Finisher', icon: '🚀', url: `${base}/img/lencana/penyelam dalam.png`, unlocked: false, color: 'primary', requiredDays: 301 },
 ];
 
 export const INITIAL_NOTIFICATIONS: Notification[] = [
